@@ -1,84 +1,68 @@
+Order.cs
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
+using System.Text;
 
 namespace OnlineStore
 {
-    class Order
-    {
-        private int orderNumber;
-        private List<Product> products;
-        private static int ordersCount = 0;
+class Order
+{
+private int orderNumber;
+private List<Product> productsList = new List<Product>();
+private static int ordersCount = 0;
 
-        public int OrderNumber
-        {
-            get { return this.orderNumber; }
-            set { this.orderNumber = value; }
-        }
+public int OrderNumber
+{
+get { return this.orderNumber; }
+set { this.orderNumber = value; }
+}
 
-        public List<Product> Products
-        {
-            get { return this.products; }
-            set { this.products = value; }
-        }
+public List<Product> ProductsList
+{
+get { return this.productsList; }
+set { this.productsList = value; }
+}
 
-        public Order(int orderNumber, List<Product> productsList)
+public static int OrdersCount
+{
+get { return Order.ordersCount; }
+set { Order.ordersCount = value; }
+}
 
-        {
-            this.OrderNumber = orderNumber;
-            this.products = productsList;
-            ordersCount++;
-        }
+public Order(int orderNumber, List<Product> productsList)
 
-        public static int OrdersCount
-        {
-            get { return ordersCount; }
-        }
+{
+this.OrderNumber = orderNumber;
+this.ProductsList = productsList;
+Order.OrdersCount++;
+}
 
+public void AddProduct(Product product)
+{
+this.productsList.Add(product);
+}
 
-        public void AddProduct(Product product)
-        {
-            products.Add(product);
-        }
-        
-        public double GetOrderTotalPrice()
-        {
-            var t = 0.0;
-            foreach (var item in Products)
-            {
-                t += item.Price;
-            }
-            return t;
-        }
+public double GetOrderTotalPrice()
+{
+return this.ProductsList.Sum(p => p.Price);
+}
 
-        public double GetDiscountedProductsTotalPrice()
+public double GetDiscountedProductsTotalPrice()
+{
+return this.ProductsList.Where(p => p.IsOnPromotion).Sum(p => p.Price);
+}
 
-        {
-            var t = 0.0;
-            foreach (var item in Products.Where(p=>p.IsOnPromotion=true))
-            {
-                t += item.Price;
-            }
-            return t;
-        }
+public int GetDiscountedProductsCount()
+{
+return this.productsList.Where(p => p.IsOnPromotion).Count();
+}
 
-        public double GetDiscountedProductsCount()
-        {
-            var t = 0.0;
-            foreach (var item in Products.Where(p => p.IsOnPromotion = true))
-            {
-                t +=1;
-            }
-            return t;
-        }
+public override string ToString()
+{
+return $"Order #{this.OrderNumber} has the following products:\n" +
+string.Join("\n###", this.productsList.Select(p => p.ToString()));
+}
 
-
-
-        public override string ToString()
-        {
-            return $"Order: #{this.OrderNumber} has the following products:\n" +
-                $"###{string.Join("\n###", products.Select(p => p.ToString()))}" ;
-        }
-    }
+}
 }
