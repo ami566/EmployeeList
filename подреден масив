@@ -1,0 +1,44 @@
+using System;
+using System.Linq;
+
+namespace QuickSearch
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int[] arr = Console.ReadLine().Split(' ').Select(int.Parse).ToArray();
+            int n = int.Parse(Console.ReadLine());
+            bool found = false;
+            int left = 0;
+            int right = arr.Length - 1;
+            
+            while ((left+1<right) && (n > arr[0]) && (n < arr[arr.Length - 1]))
+            {
+                int middle = (left + right) / 2;
+
+                if (arr[middle] == n)
+                {
+                  found = true; break;
+                }
+                else
+                {
+                    if (arr[middle] < n)
+                    {
+                        left = middle;
+                    }
+                    else
+                    {
+                        right = middle;
+                   }
+                }
+            }
+
+            if (found)
+            {
+                Console.WriteLine($"{n} exists in the Array");
+            }
+            else Console.WriteLine($"{n}  doesn't exist in the Array");
+        }
+    }
+}
